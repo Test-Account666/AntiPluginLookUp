@@ -1,0 +1,159 @@
+#######################################################
+#                  AntiPluginLookUp                   #
+#                   Version 2.0.0                     #
+#                    by Entity303                     #
+#######################################################
+#######################################################
+# Usage:                                              #
+# %player% - Gets replaced with the player's name     #
+# %break% - Gets replaced with a new line             #
+# &a-f/0-9 - Gets replaced with the color codes       #
+#######################################################
+
+# Should debug messages be sent?
+Debug: false
+
+# Will you allow me to see, if you're using my plugin? :>
+NotifyPluginDevOnJoin: true
+
+# Here you can change the prefix. You can see the prefix in front of the messages. An example: "AntiPluginLookUp | <message>"
+Prefix: '&8[&3AntiPluginLookUp&8]&7 '
+
+# Here you can determine if AntiPluginLookUp should automatically update
+autoUpdate: true
+
+# Here you can choose between the languages German ('de'), English ('en') and Persian ('fa')
+Language: 'en'
+
+# Block everything that has to do with / + [TAB]
+BlockTabComplete: true
+
+# The message which gets send to the player that doesn't have permission to /aplu or /antipluginlookup. Enter 'null' to display the default message
+NoPermissions: 'null'
+
+# Here you can set if the tab-whitelist should be active
+TabWhitelistActive: false
+
+# Here you can block all commands of a plugin (Overridden by Whitelist)
+BlacklistPlugins:
+  antipluginlookup:
+    Worlds: "global"
+    Message: 'Unknown command. Type "/help" for help.'
+    Permission: "blacklist.antipluginlookup"
+
+# Here you can set which commands/arguments should be tabable (only works if the tab-whitelist is active)
+# Example:
+#  # This is the command you want to whitelist
+#  help:
+#    # Here you can set the permission that is needed to tabcomplete that command
+#    Permission: "command.example"
+#    # Here you can set if a permission is needed to tabcomplete this command
+#    PermissionNeeded: false
+#    # Here you can set on which worlds the command should be tabbable (global = everywhere)
+#    Worlds: "Lobby,CityBuild"
+#    # If BlockArguments is set to true, the player will not be able to tab complete arguments
+#    BlockArguments: false
+WhitelistedCommands:
+  example:
+    Permission: "command.example"
+    PermissionNeeded: false
+    Worlds: "Lobby,CityBuild"
+    BlockArguments: true
+  example2:
+    Permission: "command.example"
+    PermissionNeeded: true
+    Worlds: "global"
+    BlockArguments: false
+
+
+WhitelistedCommandsGroups:
+  exampleGroup:
+    Permission: "group.example"
+    PermissionNeeded: false
+    Worlds: "global"
+    Commands: "help,sethome,delhome,home,warp"
+    BlockArguments: false
+
+# Here you can set which commands should be blocked
+BlockedCommands:
+# Example:
+#  # This is the command you want to block
+#  pl:
+#    # Here you can set the permission to use the command
+#    Permission: "antipluginlookup.allow.commands"
+#    # Here you can set if a message should be send
+#    SendMessage: true
+#    # Here you can set the message which is send if the player doesnt have the permission
+#    Message: "Plugins (5): &aNothing&r, &cto&r, &asee&r, &chere&r, &a;P"
+#    # Here you can set if advertisment for my plugin should be send
+#    SendAdvertisement: true
+#    # Here you can set if the command should be blocked if it has the bukkit: prefix
+#    Bukkit: true
+#    # Here you can set if the command should be blocked if it has the minecraft: prefix
+#    Minecraft: false
+#    # Here you can set in which worlds the command should be blocked (global = everywhere)
+#    Worlds: "global"
+  pl:
+    Permission: "antipluginlookup.allow.commands"
+    SendMessage: true
+    Message: "Plugins (5): &aNothing&r, &cto&r, &asee&r, &chere&r, &a;P"
+    SendAdvertisement: true
+    Bukkit: true
+    Minecraft: false
+    Worlds: "global"
+  plugins:
+    Permission: "antipluginlookup.allow.commands"
+    SendMessage: true
+    Message: "Plugins (5): &aNothing&r, &cto&r, &asee&r, &chere&r, &a;P"
+    SendAdvertisement: true
+    Bukkit: true
+    Minecraft: false
+    Worlds: "global"
+  ver:
+    Permission: "antipluginlookup.allow.commands"
+    SendMessage: true
+    Message: "Plugins (5): &aNothing&r, &cto&r, &asee&r, &chere&r, &a;P"
+    SendAdvertisement: false
+    Bukkit: true
+    Minecraft: false
+    Worlds: "global"
+  version:
+    Permission: "antipluginlookup.allow.commands"
+    SendMessage: true
+    Message: "Plugins (5): &aNothing&r, &cto&r, &asee&r, &chere&r, &a;P"
+    SendAdvertisement: false
+    Bukkit: true
+    Minecraft: false
+    Worlds: "global"
+  icanhasbukkit:
+    Permission: "antipluginlookup.allow.commands"
+    SendMessage: true
+    Message: "Plugins (5): &aNothing&r, &cto&r, &asee&r, &chere&r, &a;P"
+    SendAdvertisement: false
+    Bukkit: true
+    Minecraft: false
+    Worlds: "global"
+  about:
+    Permission: "antipluginlookup.allow.commands"
+    SendMessage: true
+    Message: "Plugins (5): &aNothing&r, &cto&r, &asee&r, &chere&r, &a;P"
+    SendAdvertisement: true
+    Bukkit: true
+    Minecraft: false
+    Worlds: "global"
+
+BlockedCommandsGroups:
+  help:
+    Permission: "antipluginlookup.allow.commands"
+    SendMessage: true
+    Message: "Plugins (5): &aNothing&r, &cto&r, &asee&r, &chere&r, &a;P"
+    SendAdvertisement: false
+    Bukkit: true
+    Minecraft: false
+    Worlds: "global"
+    Commands: "?,help"
+
+bstats: true
+
+# Do not change! It would reset the config!
+ConfigVersion: "1.7"

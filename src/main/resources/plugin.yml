@@ -1,0 +1,8 @@
+name: AntiPluginLookUp
+version: 2.0.0
+main: me.entity303.antipluginlookup.main.AntiPluginLookUp
+authors: [Entity303]
+softdepend: [ProtocolLib]
+commands:
+ antipluginlookup:
+  aliases: [aplu]

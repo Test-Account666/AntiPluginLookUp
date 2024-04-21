@@ -1,0 +1,6 @@
+ChangedLanguage: "&7The language was set to english"
+HelpDescription: "&7Shows this Message!"
+LanguageDescription: "&7Changes the language!"
+ReloadDescription: "&7Reloads the config!"
+ConfigReloaded: "&7The config was reloaded!"
+ErrorLanguage: "&cError while trying to load language '&4<LANGUAGE>&c'!"

@@ -1,0 +1,6 @@
+ChangedLanguage: "&7La lingua è stata imposta su: Italiano"
+HelpDescription: "&7Mostra questo messaggio."
+LanguageDescription: "&7Cambia la lingua."
+ReloadDescription: "&7Ricarica la configurazione."
+ConfigReloaded: "&7La configurazione è stata ricaricata."
+ErrorLanguage: "&cErrore durante l'impostazione del linguaggio: '&4<LANGUAGE>&c'!"

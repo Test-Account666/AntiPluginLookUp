@@ -1,0 +1,6 @@
+ChangedLanguage: "&7Die Sprache wurde auf Deutsch gestellt!"
+HelpDescription: "&7Zeigt diese Nachricht!"
+LanguageDescription: "&7Ändert die Sprache!"
+ReloadDescription: "&7Lädt die Config neu!"
+ConfigReloaded: "&7Die Config wurde neu geladen!"
+ErrorLanguage: "&cFehler beim Laden der Sprache '&4<LANGUAGE>&c'!"
