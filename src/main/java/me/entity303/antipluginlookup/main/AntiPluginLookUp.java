@@ -13,6 +13,7 @@ import me.entity303.antipluginlookup.newerversions.WorldChangeListener;
 import me.entity303.antipluginlookup.olderversions.JoinListener;
 import me.entity303.antipluginlookup.olderversions.TabBlocker;
 import me.entity303.antipluginlookup.olderversions.TabBlocker_Reflections_New;
+import me.entity303.antipluginlookup.utils.ChannelUtils;
 import me.entity303.antipluginlookup.utils.CustomYamlConfiguration;
 import me.entity303.antipluginlookup.utils.MessageReader;
 import me.entity303.antipluginlookup.utils.UpdateChecker;
@@ -75,28 +76,23 @@ public final class AntiPluginLookUp extends JavaPlugin implements Listener, TabC
     }
 
     public void SaveResource(String resourcePath, boolean replace) {
-        if (resourcePath == null || resourcePath.isEmpty())
-            throw new IllegalArgumentException("ResourcePath cannot be null or empty");
+        if (resourcePath == null || resourcePath.isEmpty()) throw new IllegalArgumentException("ResourcePath cannot be null or empty");
 
         resourcePath = resourcePath.replace('\\', '/');
         var inputStream = this.getResource(resourcePath);
-        if (inputStream == null)
-            throw new IllegalArgumentException("The embedded resource '" + resourcePath + "' cannot be found in " + this.getFile());
+        if (inputStream == null) throw new IllegalArgumentException("The embedded resource '" + resourcePath + "' cannot be found in " + this.getFile());
 
         var outputFile = new File(this.getDataFolder(), resourcePath);
         var outputDirectory = outputFile.getParentFile();
-        if (!outputDirectory.exists())
-            outputDirectory.mkdirs();
+        if (!outputDirectory.exists()) outputDirectory.mkdirs();
 
         try {
-            if (outputFile.exists() && !replace)
-                return;
+            if (outputFile.exists() && !replace) return;
 
             try (var outputStream = Files.newOutputStream(outputFile.toPath())) {
                 var buffer = new byte[1024];
                 int bytesRead;
-                while ((bytesRead = inputStream.read(buffer)) != -1)
-                    outputStream.write(buffer, 0, bytesRead);
+                while ((bytesRead = inputStream.read(buffer)) != -1) outputStream.write(buffer, 0, bytesRead);
             }
         } catch (IOException exception) {
             this.getLogger().log(Level.SEVERE, "Could not save " + outputFile.getName() + " to " + outputFile, exception);
@@ -111,11 +107,9 @@ public final class AntiPluginLookUp extends JavaPlugin implements Listener, TabC
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String commandLabel, String[] arguments) {
-        if (!command.getName().equalsIgnoreCase("antipluginlookup"))
-            return false;
+        if (!command.getName().equalsIgnoreCase("antipluginlookup")) return false;
 
-        if (arguments.length == 0)
-            arguments = new String[] { "help" };
+        if (arguments.length == 0) arguments = new String[] { "help" };
 
         var commandName = arguments[0].toLowerCase();
 
@@ -132,8 +126,7 @@ public final class AntiPluginLookUp extends JavaPlugin implements Listener, TabC
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String commandLabel, String[] arguments) {
-        if (!command.getName().equalsIgnoreCase("antipluginlookup"))
-            return List.of();
+        if (!command.getName().equalsIgnoreCase("antipluginlookup")) return List.of();
 
         if (arguments.length == 1) {
             var list = new ArrayList<>(this.commandMap.keySet());
@@ -160,14 +153,14 @@ public final class AntiPluginLookUp extends JavaPlugin implements Listener, TabC
 
     @Override
     public void onDisable() {
-        if (this.metricsLite == null)
-            return;
+        if (this.metricsLite == null) return;
 
         this.metricsLite.shutdown();
     }
 
     @Override
     public void onEnable() {
+        ChannelUtils.SetAntiPluginLookUp(this);
         try {
             var configurationField = Bukkit.getServer().getClass().getDeclaredField("configuration");
             configurationField.setAccessible(true);
@@ -188,19 +181,20 @@ public final class AntiPluginLookUp extends JavaPlugin implements Listener, TabC
         this.reloadConfig();
         this.messageReader = new MessageReader(this);
         this.messageReader.LoadMessages("en");
-        if (!this.messageReader.LoadMessages(this.getConfig().getString("Language")))
-            Bukkit.getConsoleSender()
-                  .sendMessage(ChatColor.translateAlternateColorCodes('&', this.messageReader.GetMessage("ErrorLanguage"))
-                                        .replace("<LANGUAGE>", this.getConfig().getString("Language")));
+        if (!this.messageReader.LoadMessages(this.getConfig().getString("Language"))) Bukkit.getConsoleSender()
+                                                                                            .sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                                                                                                                                this.messageReader.GetMessage(
+                                                                                                                                                        "ErrorLanguage"))
+                                                                                                                  .replace("<LANGUAGE>", this.getConfig()
+                                                                                                                                             .getString(
+                                                                                                                                                     "Language")));
 
         this.RegisterCommandAndListeners();
         this.CheckForUpdates();
 
-        if (!Bukkit.getOnlinePlayers().isEmpty())
-            Bukkit.getOnlinePlayers().forEach(Player::updateCommands);
+        if (!Bukkit.getOnlinePlayers().isEmpty()) Bukkit.getOnlinePlayers().forEach(Player::updateCommands);
 
-        if (Bukkit.getOnlinePlayers().isEmpty())
-            return;
+        if (Bukkit.getOnlinePlayers().isEmpty()) return;
 
         for (var player : Bukkit.getOnlinePlayers())
             try {
@@ -214,13 +208,11 @@ public final class AntiPluginLookUp extends JavaPlugin implements Listener, TabC
         var foundCommand = this.GetCommandMap().get("help");
 
         for (var foundCommandName : this.GetCommandMap().keySet()) {
-            if (!foundCommandName.startsWith(commandName))
-                continue;
+            if (!foundCommandName.startsWith(commandName)) continue;
 
             foundCommand = this.GetCommandMap().get(foundCommandName);
 
-            if (foundCommandName.equalsIgnoreCase(commandName))
-                break;
+            if (foundCommandName.equalsIgnoreCase(commandName)) break;
         }
 
         return foundCommand;
@@ -235,15 +227,13 @@ public final class AntiPluginLookUp extends JavaPlugin implements Listener, TabC
     }
 
     private void CheckConfigVersion() {
-        if (!this.configFile.exists())
-            return;
+        if (!this.configFile.exists()) return;
 
         FileConfiguration cfg = YamlConfiguration.loadConfiguration(this.configFile);
 
         var foundVersion = cfg.getString("ConfigVersion");
 
-        if ("1.7".equals(foundVersion))
-            return;
+        if ("1.7".equals(foundVersion)) return;
 
         if (cfg.isSet("KeineRechte") || cfg.isSet("BlockiereTabComplete")) {
             this.Warn("There were breaking changes in 2.0.0!");
@@ -339,8 +329,7 @@ public final class AntiPluginLookUp extends JavaPlugin implements Listener, TabC
             var version = this.getDescription().getVersion();
             var success = this.CheckMainServerForUpdates(version, autoUpdate);
 
-            if (success)
-                return;
+            if (success) return;
 
             this.CheckBackupServerForUpdates(version, autoUpdate);
 
@@ -390,6 +379,9 @@ public final class AntiPluginLookUp extends JavaPlugin implements Listener, TabC
         } else if (version.contains("1.20")) {
             this.Log("AntiPluginLookUp is running on 1.20!");
             this.RegisterGenericVersionStuff();
+        } else if (version.contains("1.21")) {
+            this.Log("AntiPluginLookUp is running on 1.21!");
+            this.RegisterGenericVersionStuff();
         } else {
             this.Warn("Unsupported version detected! Continue with own risk! (Support may not be guaranteed)");
             this.Log("AntiPluginLookUp is running on " + version + "!");
@@ -432,8 +424,8 @@ public final class AntiPluginLookUp extends JavaPlugin implements Listener, TabC
         this.Log("(You need to restart the server so the update can take effect)");
 
         try {
-            var inputStream = new BufferedInputStream(
-                    new URL("http://pluginsupport.zapto.org:80/PluginSupport/AntiPluginLookUp/" + version + ".jar").openStream());
+            var inputStream =
+                    new BufferedInputStream(new URL("http://pluginsupport.zapto.org:80/PluginSupport/AntiPluginLookUp/" + version + ".jar").openStream());
 
             this.DownloadFile(inputStream);
             return true;
@@ -499,14 +491,12 @@ public final class AntiPluginLookUp extends JavaPlugin implements Listener, TabC
         try (var fileOutputStream = new FileOutputStream(new File("plugins/update", this.jarName))) {
             var dataBuffer = new byte[1024];
             int bytesRead;
-            while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1)
-                fileOutputStream.write(dataBuffer, 0, bytesRead);
+            while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) fileOutputStream.write(dataBuffer, 0, bytesRead);
         }
     }
 
     public void Debug(String text) {
-        if (!this.getConfig().getBoolean("Debug"))
-            return;
+        if (!this.getConfig().getBoolean("Debug")) return;
 
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&a[Debug] [AntiPluginLookUp] " + text));
     }
@@ -523,8 +513,7 @@ public final class AntiPluginLookUp extends JavaPlugin implements Listener, TabC
         this.RegisterCommandAndListeners();
         this.CheckForUpdates();
 
-        if (!Bukkit.getOnlinePlayers().isEmpty())
-            Bukkit.getOnlinePlayers().forEach(Player::updateCommands);
+        if (!Bukkit.getOnlinePlayers().isEmpty()) Bukkit.getOnlinePlayers().forEach(Player::updateCommands);
 
     }
 
@@ -539,11 +528,9 @@ public final class AntiPluginLookUp extends JavaPlugin implements Listener, TabC
 
     @EventHandler
     public void OnJoin(PlayerJoinEvent e) {
-        if (!this.getConfig().getBoolean("NotifyPluginDevOnJoin", true))
-            return;
+        if (!this.getConfig().getBoolean("NotifyPluginDevOnJoin", true)) return;
 
-        if (!e.getPlayer().getUniqueId().toString().equalsIgnoreCase("6c3a735f-433c-4c5c-aae2-3211d7e7acdc"))
-            return;
+        if (!e.getPlayer().getUniqueId().toString().equalsIgnoreCase("6c3a735f-433c-4c5c-aae2-3211d7e7acdc")) return;
 
         e.getPlayer().sendMessage("§aDer Server nutzt AntiPluginLookUp <3");
     }
@@ -551,8 +538,7 @@ public final class AntiPluginLookUp extends JavaPlugin implements Listener, TabC
     private boolean IsFoundVersionMoreRecent(String foundVersion, String currentVersion) {
         var foundVersionSplit = foundVersion.split("\\.");
 
-        if (foundVersionSplit.length < 3)
-            return false;
+        if (foundVersionSplit.length < 3) return false;
 
         var foundVersionMajor = Long.parseLong(foundVersionSplit[0]);
         var foundVersionMinor = Long.parseLong(foundVersionSplit[1]);
@@ -560,19 +546,16 @@ public final class AntiPluginLookUp extends JavaPlugin implements Listener, TabC
 
         var currentVersionSplit = currentVersion.split("\\.");
 
-        if (currentVersionSplit.length < 3)
-            return true;
+        if (currentVersionSplit.length < 3) return true;
 
         var currentVersionMajor = Long.parseLong(currentVersionSplit[0]);
         var currentVersionMinor = Long.parseLong(currentVersionSplit[1]);
         var currentVersionPatch = Long.parseLong(currentVersionSplit[2]);
 
 
-        if (currentVersionMajor < foundVersionMajor)
-            return true;
+        if (currentVersionMajor < foundVersionMajor) return true;
 
-        if (currentVersionMinor < foundVersionMinor)
-            return true;
+        if (currentVersionMinor < foundVersionMinor) return true;
 
         return currentVersionPatch < foundVersionPatch;
     }
